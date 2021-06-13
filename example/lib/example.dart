@@ -1,8 +1,7 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
-library example;
+import 'package:example/animal.dart';
 
-export 'src/example_base.dart';
-
-// TODO: Export any libraries intended for clients of this package.
+void main() {
+  // asString
+  var animal = Animal.fish;
+  print(animal.asString);
+}
