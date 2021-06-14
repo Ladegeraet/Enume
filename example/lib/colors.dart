@@ -3,6 +3,7 @@ import 'package:enume/enume.dart';
 part 'colors.g.dart';
 
 @stringEnum
+@name
 enum Colors {
   @Value('#FF0000')
   red,

@@ -8,8 +8,8 @@ import 'package:enume/enume.dart';
 import 'package:enume_generator/src/validator.dart';
 import 'package:source_gen/source_gen.dart';
 
-class AsStringGenerator extends GeneratorForAnnotation<AsString> {
-  const AsStringGenerator();
+class NameGenerator extends GeneratorForAnnotation<Name> {
+  const NameGenerator();
 
   @override
   FutureOr<String> generateForAnnotatedElement(
@@ -19,22 +19,22 @@ class AsStringGenerator extends GeneratorForAnnotation<AsString> {
   ) async {
     if (!EnumValidator.isEnum(element.enclosingElement)) {
       throw InvalidGenerationSourceError(
-          '${element.displayName} is not a enum and cannot be annotated with @asString',
+          '${element.displayName} is not a enum and cannot be annotated with @name',
           element: element,
-          todo: 'Add asString annotations only to a enum');
+          todo: 'Add name annotations only to a enum');
     }
-    return _generateAsString(element);
+    return _generateName(element);
   }
 
-  String _generateAsString(Element element) {
-    final asStringExtension = Extension(
+  String _generateName(Element element) {
+    final nameExtension = Extension(
       (e) => e
-        ..name = 'AsString'
+        ..name = 'Name'
         ..on = refer(element.displayName)
         ..methods.add(
           Method(
             (m) => m
-              ..name = 'asString'
+              ..name = 'name'
               ..returns = refer('String')
               ..lambda = true
               ..type = MethodType.getter
@@ -46,6 +46,6 @@ class AsStringGenerator extends GeneratorForAnnotation<AsString> {
     );
 
     final emitter = DartEmitter();
-    return DartFormatter().format('${asStringExtension.accept(emitter)}');
+    return DartFormatter().format('${nameExtension.accept(emitter)}');
   }
 }

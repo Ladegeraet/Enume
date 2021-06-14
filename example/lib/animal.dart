@@ -2,7 +2,7 @@ import 'package:enume/enume.dart';
 
 part 'animal.g.dart';
 
-@asString
+@name
 enum Animal {
   dog,
   cat,

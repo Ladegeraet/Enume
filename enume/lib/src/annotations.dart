@@ -1,8 +1,8 @@
-class AsString {
-  const AsString();
+class Name {
+  const Name();
 }
 
-const asString = AsString();
+const name = Name();
 
 class TypedEnum<T> {
   final T type;

@@ -3,9 +3,9 @@
 part of 'animal.dart';
 
 // **************************************************************************
-// AsStringGenerator
+// NameGenerator
 // **************************************************************************
 
-extension AsString on Animal {
-  String get asString => toString().substring(7);
+extension Name on Animal {
+  String get name => toString().substring(7);
 }
