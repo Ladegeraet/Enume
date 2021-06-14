@@ -5,7 +5,7 @@ import 'package:example/difficulty.dart';
 void main() {
   // asString
   var animal = Animal.fish;
-  print(animal.asString);
+  print(animal.name);
 
   // TypedEnums
   print(Colors.blue.value);
