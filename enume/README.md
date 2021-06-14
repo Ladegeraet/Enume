@@ -10,7 +10,7 @@ dependencies:
   
 dev_dependencies:  
   # add the enume_generator to your dev_dependencies  
-  injectable_genenume_generatorerator:  
+  enume_generator:  
 ```
 
 ## Usage
