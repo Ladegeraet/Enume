@@ -1,8 +1,7 @@
 name: enume_generator
-description: Enume generator - useful enum extensions for dart
+description: Enume - collection of useful enum extensions for dart. Like a Name-Method and TypedEnums for the ability to assign specific values each of the enumerated types.
 version: 1.0.0
-publish_to: none
-# homepage: https://www.example.com
+homepage: https://github.com/Ladegeraet/Enume
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -13,8 +12,7 @@ dependencies:
   source_gen: ^1.0.1
   code_builder: ^4.0.0
   dart_style: ^2.0.1
-  enume:
-    path: ../enume
+  enume: ^1.0.0
 
 dev_dependencies:
   pedantic: ^1.10.0

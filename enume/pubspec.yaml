@@ -1,7 +1,7 @@
 name: enume
-description: Enume - useful enum extensions for dart
+description: Enume - collection of useful enum extensions for dart. Like a Name-Method and TypedEnums for the ability to assign specific values each of the enumerated types.
 version: 1.0.0
-# homepage: https://www.example.com
+homepage: https://github.com/Ladegeraet/Enume
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
