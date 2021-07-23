@@ -5,8 +5,8 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:enume/enume.dart';
-import 'package:enume_generator/src/name_generator.dart';
 import 'package:enume_generator/src/validator.dart';
+
 import 'package:source_gen/source_gen.dart';
 
 class EnumeGenerator extends GeneratorForAnnotation<Enume> {
@@ -30,11 +30,21 @@ class EnumeGenerator extends GeneratorForAnnotation<Enume> {
     final enumeConfig = readConfig(annotation, enumeElement);
 
     if (enumeConfig['nameMethod']) {
-      code.add(NameGenerator().generateNameExtensionCode(element));
+      code.add(_generateNameExtensionCode(element));
     }
 
-    final valueConfig = _extractValues(element);
-    if (valueConfig!.isNotEmpty) {}
+    final values = _extractValues(element);
+    var valueMap = <String, List<_GeneratorValue>>{};
+    for (var value in values) {
+      if (!valueMap.containsKey(value.methodName)) {
+        valueMap[value.methodName] = [];
+      }
+      valueMap[value.methodName]?.add(value);
+    }
+
+    for (var entry in valueMap.entries) {
+      code.add(_generateValueExtensionCode(element, entry.key, entry.value));
+    }
 
     return code.join();
   }
@@ -42,51 +52,50 @@ class EnumeGenerator extends GeneratorForAnnotation<Enume> {
   Map<String, dynamic> readConfig(
       ConstantReader annotation, ClassElement enumeElement) {
     final config = <String, dynamic>{};
-    print(enumeElement.fields);
     enumeElement.fields.forEach((field) {
       final configField = annotation.read(field.name).literalValue;
       config.putIfAbsent(field.name, () => configField);
     });
-
+    print('readConfig: $config');
     return config;
   }
 
-  Map<String, dynamic>? _extractValues(ClassElement element) {
-    final fieldValues = <String, List>{};
-    for (var f in element.fields) {
-      if (_valueChecker.hasAnnotationOfExact(f)) {
-        _valueChecker.annotationsOf(f).forEach((annotation) {
+  List<_GeneratorValue> _extractValues(ClassElement element) {
+    final values = <_GeneratorValue>[];
+
+    for (final field in element.fields) {
+      if (_valueChecker.hasAnnotationOfExact(field)) {
+        _valueChecker.annotationsOf(field).forEach((annotation) {
           final methodNameField = annotation.getField('name')!;
           final value = annotation.getField('value')!;
           final methodName = ConstantReader(methodNameField).stringValue;
           final valueReader = ConstantReader(value);
 
-          if (fieldValues[methodName] == null) {
-            fieldValues[methodName] = [];
-          }
-
-          fieldValues[methodName]!.add(valueReader.literalValue);
+          final generatorValue = _GeneratorValue(
+              field: field,
+              methodName: methodName,
+              value: valueReader.literalValue!);
+          values.add(generatorValue);
         });
       }
     }
-    print(fieldValues);
-    return fieldValues;
+
+    return values;
   }
 
   String _generateValueExtensionCode(
-      ClassElement element, String name, List values) {
+      ClassElement classElement, String name, List<_GeneratorValue> values) {
     final nameExtension = Extension(
       (e) => e
-        ..name = '${element.displayName}$name'
-        ..on = refer(element.displayName)
+        ..name = '${classElement.displayName}$name'
+        ..on = refer(classElement.displayName)
         ..methods.add(
           Method(
             (m) => m
               ..name = name
-              ..returns = refer(values.first.runtimeType.toString())
-              ..lambda = true
+              ..returns = refer(values.first.value.runtimeType.toString())
               ..type = MethodType.getter
-              ..body = _generateBody(element, fieldValues),
+              ..body = _generateBody(classElement, values),
           ),
         ),
     );
@@ -95,14 +104,69 @@ class EnumeGenerator extends GeneratorForAnnotation<Enume> {
     return DartFormatter().format('${nameExtension.accept(emitter)}');
   }
 
-  String _generateCase(String enumName, String key, dynamic value) {
-    return 'case $enumName.$key: return ${value.toString()};';
+  String _generateCase(String enumName, String key, Object value) {
+    print(value.runtimeType);
+    if (value is String) {
+      return 'case $enumName.$key: return \'$value\';';
+    } else {
+      return 'case $enumName.$key: return $value;';
+    }
   }
 
-  Code _generateBody(Element element, List values) {
+  Code _generateBody(Element classElement, List<_GeneratorValue> values) {
     // String code =
-    final cases = values.fold('', (previousValue, element) => _generateCase(element.displayName, , ));
+
+    final cases = values.fold<String>(
+      '',
+      (previousValue, element) =>
+          previousValue +
+          _generateCase(
+            classElement.displayName,
+            element.field.displayName,
+            element.value,
+          ),
+    );
 
     return Code('switch (this) {$cases}');
+  }
+
+  String _generateNameExtensionCode(Element element) {
+    final nameExtension = Extension(
+      (e) => e
+        ..name = '${element.displayName}Name'
+        ..on = refer(element.displayName)
+        ..methods.add(
+          Method(
+            (m) => m
+              ..name = 'name'
+              ..returns = refer('String')
+              ..lambda = true
+              ..type = MethodType.getter
+              ..body = Code(
+                'toString().substring(${element.displayName.length + 1})',
+              ),
+          ),
+        ),
+    );
+
+    final emitter = DartEmitter();
+    return DartFormatter().format('${nameExtension.accept(emitter)}');
+  }
+}
+
+class _GeneratorValue {
+  final FieldElement field;
+  final String methodName;
+  final Object value;
+
+  _GeneratorValue({
+    required this.field,
+    required this.methodName,
+    required this.value,
+  });
+
+  @override
+  String toString() {
+    return '[field: $field, methodName: $methodName, value: $value]';
   }
 }

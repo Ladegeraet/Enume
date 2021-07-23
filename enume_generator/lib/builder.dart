@@ -9,6 +9,7 @@ Builder enumeBuilder(BuilderOptions options) => SharedPartBuilder(
       [
         EnumeGenerator(),
         TypedEnumGenerator(),
+        NameGenerator(),
       ],
       'enume',
     );
