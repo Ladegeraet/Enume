@@ -3,14 +3,9 @@
 part of 'animal.dart';
 
 // **************************************************************************
-// TypedEnumGenerator
+// EnumeGenerator
 // **************************************************************************
 
-extension Values on Animal {
-  String get value {
-    switch (this) {
-      case Animal.dog:
-        return 'value';
-    }
-  }
+extension AnimalName on Animal {
+  String get name => toString().substring(7);
 }

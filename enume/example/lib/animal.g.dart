@@ -3,9 +3,9 @@
 part of 'animal.dart';
 
 // **************************************************************************
-// NameGenerator
+// EnumeGenerator
 // **************************************************************************
 
-extension Name on Animal {
+extension AnimalName on Animal {
   String get name => toString().substring(7);
 }
