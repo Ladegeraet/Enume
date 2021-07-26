@@ -1,4 +1,4 @@
-## 1.1
+## 1.1.0
 - Changed Annotation to @Enume()
 - Multiple @Value support 
 
