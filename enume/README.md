@@ -18,7 +18,7 @@ dev_dependencies:
 Generates a __name__ getter method that returns the name of this enum constant, exactly as declared in its enum declaration.
 
 ```dart
-@name
+@Enume()
 enum Animal {
   dog,
   cat,
@@ -30,39 +30,25 @@ enum Animal {
 print(Animal.dog.name); // "dog"
 ```
 
-### stringEnum
-Generates a __value__ getter method that returns the associated annoted __string__ value.
+### Value
+Generates a __value__ getter method that returns the associated annoted value. (Currently only literals are supported!)
 ```dart
-@stringEnum
-enum Colors {
-  @Value('#FF0000')
-  red,
-  @Value('#00FF00')
-  green,
-  @Value('#0000FF')
-  blue,
+@Enume(nameMethod: false)
+enum HttpStatus {
+  @Value(200, name: 'code')
+  @Value('OK')
+  ok,
+  @Value(400, name: 'code')
+  @Value('Bad Request')
+  badRequest,
+  @Value(407, name: 'code')
+  @Value('Proxy Authentication Required')
+  conflict,
 }
 
 // Example
-print(Colors.red.value); // "#FF0000"
-```
-
-### intEnum
-Generates a __value__ getter method that returns the associated annoted __int__ value.
-
-```dart
-@intEnum
-enum Difficulty {
-  @Value(5)
-  easy,
-  @Value(15)
-  medium,
-  @Value(25)
-  hard
-}
-
-// Example
-print(Difficulty.medium.value); // 15
+print(HttpStatus.ok.value); // 20
+print(HttpStatus.conflict.code); // "Proxy Authentication Required"
 ```
 
 ## Roadmap

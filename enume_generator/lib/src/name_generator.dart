@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:build/src/builder/build_step.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
+
+import 'package:build/build.dart';
 import 'package:enume/enume.dart';
 import 'package:enume_generator/src/validator.dart';
 import 'package:source_gen/source_gen.dart';
