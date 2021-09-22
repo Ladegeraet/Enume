@@ -56,7 +56,6 @@ class EnumeGenerator extends GeneratorForAnnotation<Enume> {
       final configField = annotation.read(field.name).literalValue;
       config.putIfAbsent(field.name, () => configField);
     });
-    print('readConfig: $config');
     return config;
   }
 
@@ -105,7 +104,6 @@ class EnumeGenerator extends GeneratorForAnnotation<Enume> {
   }
 
   String _generateCase(String enumName, String key, Object value) {
-    print(value.runtimeType);
     if (value is String) {
       return 'case $enumName.$key: return \'$value\';';
     } else {

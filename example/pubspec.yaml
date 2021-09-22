@@ -8,8 +8,8 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  enume:
-    path: ../enume
+  enume: any
+
 
 dev_dependencies:
   pedantic: ^1.10.0
