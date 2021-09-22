@@ -1,6 +1,6 @@
 builders:
   enume:
-    import: "package:enume_generator/builder.dart"
+    import: "package:enume_generator/enume_generator.dart"
     builder_factories: ["enumeBuilder"]
     build_extensions: { ".dart": ["g.part"] }
     auto_apply: dependents
